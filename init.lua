@@ -48,28 +48,28 @@ hs.hotkey.bind(
 
 -- quarter of screen
 hs.hotkey.bind(
-    {"alt", "cmd", "ctrl"},
+    {"alt", "ctrl"},
     "left",
     function()
         hs.window.focusedWindow():moveToUnit({0, 0, 0.5, 0.5})
     end
 )
 hs.hotkey.bind(
-    {"alt", "cmd", "ctrl"},
+    {"alt", "ctrl"},
     "down",
     function()
         hs.window.focusedWindow():moveToUnit({0, 0.5, 0.5, 0.5})
     end
 )
 hs.hotkey.bind(
-    {"alt", "cmd", "ctrl"},
+    {"alt", "ctrl"},
     "up",
     function()
         hs.window.focusedWindow():moveToUnit({0.5, 0, 0.5, 0.5})
     end
 )
 hs.hotkey.bind(
-    {"alt", "cmd", "ctrl"},
+    {"alt", "ctrl"},
     "right",
     function()
         hs.window.focusedWindow():moveToUnit({0.5, 0.5, 0.5, 0.5})
@@ -78,6 +78,39 @@ hs.hotkey.bind(
 
 -- move between windows
 
-switcher = hs.window.switcher.new()
-hs.hotkey.bind('alt','tab','Next window',function()switcher:next()end)
-hs.hotkey.bind('alt-shift','tab','Prev window',function()switcher:previous()end)
+
+-- tabs
+
+
+
+
+-- App launching
+
+hs.loadSpoon("SpoonInstall")
+
+spoon.SpoonInstall:andUse("AppLauncher", {
+    hotkeys = {
+        c = "Google Chrome",
+        s = "Safari",
+        x = "XCode",
+        v = "Visual Studio Code",
+        n = "Notes",
+        m = "Mail",
+        h = "Hammerspoon",
+        t = "Terminal",
+        d = "Discord Canary"
+    }
+})
+
+-- screen movement
+
+spoon.SpoonInstall:andUse("WindowScreenLeftAndRight")
+
+spoon.WindowScreenLeftAndRight:bindHotkeys(spoon.WindowScreenLeftAndRight.defaultHotkeys)
+
+
+-- mouse movement
+
+spoon.SpoonInstall:andUse("MouseFollowsFocus")
+spoon.MouseFollowsFocus:updateMouse(hs.window.focusedWindow())
+
