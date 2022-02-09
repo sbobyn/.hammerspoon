@@ -1,6 +1,8 @@
--- full screen
+local hyper = {"alt", "ctrl"}
+  
+  -- full screen
 hs.hotkey.bind(
-    {"alt", "cmd"},
+    hyper,
     "f",
     function()
         hs.window.focusedWindow():moveToUnit({0, 0, 1, 1})
@@ -9,7 +11,7 @@ hs.hotkey.bind(
 
 -- center on screen
 hs.hotkey.bind(
-    {"alt", "cmd"},
+    hyper,
     "c",
     function()
         hs.window.focusedWindow():centerOnScreen()
@@ -18,28 +20,28 @@ hs.hotkey.bind(
 
 -- half of screen
 hs.hotkey.bind(
-    {"alt", "cmd"},
+    hyper,
     "left",
     function()
         hs.window.focusedWindow():moveToUnit({0, 0, 0.5, 1})
     end
 )
 hs.hotkey.bind(
-    {"alt", "cmd"},
+    hyper,
     "right",
     function()
         hs.window.focusedWindow():moveToUnit({0.5, 0, 0.5, 1})
     end
 )
 hs.hotkey.bind(
-    {"alt", "cmd"},
+    hyper,
     "up",
     function()
         hs.window.focusedWindow():moveToUnit({0, 0, 1, 0.5})
     end
 )
 hs.hotkey.bind(
-    {"alt", "cmd"},
+    hyper,
     "down",
     function()
         hs.window.focusedWindow():moveToUnit({0, 0.5, 1, 0.5})
@@ -48,28 +50,28 @@ hs.hotkey.bind(
 
 -- quarter of screen
 hs.hotkey.bind(
-    {"alt", "ctrl"},
+    {"alt", "ctrl","cmd"},
     "left",
     function()
         hs.window.focusedWindow():moveToUnit({0, 0, 0.5, 0.5})
     end
 )
 hs.hotkey.bind(
-    {"alt", "ctrl"},
+    {"alt", "ctrl","cmd"},
     "down",
     function()
         hs.window.focusedWindow():moveToUnit({0, 0.5, 0.5, 0.5})
     end
 )
 hs.hotkey.bind(
-    {"alt", "ctrl"},
+    {"alt", "ctrl","cmd"},
     "up",
     function()
         hs.window.focusedWindow():moveToUnit({0.5, 0, 0.5, 0.5})
     end
 )
 hs.hotkey.bind(
-    {"alt", "ctrl"},
+    {"alt", "ctrl","cmd"},
     "right",
     function()
         hs.window.focusedWindow():moveToUnit({0.5, 0.5, 0.5, 0.5})
@@ -82,6 +84,25 @@ hs.hotkey.bind(
 -- tabs
 
 
+-- minimize window
+
+hs.hotkey.bind(
+    hyper,
+    ",",
+    function()
+        hs.window.focusedWindow():minimize()
+    end
+)
+
+-- unminimize window
+
+hs.hotkey.bind(
+    hyper,
+    ".",
+    function()
+        hs.window:unminimize()
+    end
+)
 
 
 -- App launching
@@ -91,26 +112,38 @@ hs.loadSpoon("SpoonInstall")
 spoon.SpoonInstall:andUse("AppLauncher", {
     hotkeys = {
         c = "Google Chrome",
-        s = "Safari",
+        s = "Simulator",
         x = "XCode",
         v = "Visual Studio Code",
         n = "Notes",
         m = "Mail",
         h = "Hammerspoon",
         t = "Terminal",
-        d = "Discord Canary"
+        d = "Discord Canary",
+        o = "Microsoft Outlook",
+        l = "Slack",
+        z = "zoom.us"
     }
 })
 
--- screen movement
+-- Focus windows by direction
 
-spoon.SpoonInstall:andUse("WindowScreenLeftAndRight")
+local function focus(direction)
+    local fn = "focusWindow" .. (direction:gsub("^%l", string.upper))
 
-spoon.WindowScreenLeftAndRight:bindHotkeys(spoon.WindowScreenLeftAndRight.defaultHotkeys)
+    return function()
+        local win = hs.window.focusedWindow()
+        if not win then return end
 
+        win[fn]()
+    end
+end
 
--- mouse movement
+  ----------
+-- Window navigation (tmux-like)
+----------
 
-spoon.SpoonInstall:andUse("MouseFollowsFocus")
-spoon.MouseFollowsFocus:updateMouse(hs.window.focusedWindow())
-
+hs.hotkey.bind(hyper, "i", focus("north"))
+hs.hotkey.bind(hyper, "l", focus("east"))
+hs.hotkey.bind(hyper, "k", focus("south"))
+hs.hotkey.bind(hyper, "j", focus("west"))
